@@ -1,0 +1,45 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=1000000+5 ;
+struct P
+{
+    int type,next ;
+    bool operator < (const P &rhs) const
+    {
+        return next < rhs.next ;
+    }
+};
+
+int a[maxn],last[100001],nex[maxn] ;
+bool on[100001] ;
+main()
+{
+    int x,m,n ; scanf("%d%d%d",&x,&m,&n) ;
+    for(int i=1;i<=n;i++) scanf("%d",&a[i]) ;
+    memset(last,0,sizeof(last)) ;
+    for(int i=n;i>=1;i--)
+    {
+        if(last[a[i]]==0) nex[i]=n+1 ;
+        else nex[i]=last[a[i]] ;
+        last[a[i]]=i ;
+    }
+    memset(on,0,sizeof(on)) ;
+    int num=0,ans=0 ;
+    priority_queue<P> pq ;
+    for(int i=1;i<=n;i++)
+    {
+        if(on[a[i]]) {pq.push((P){a[i],nex[i]}) ; continue ;}
+        num++ ;
+        if(num==m+1)
+        {
+            P u=pq.top() ; pq.pop() ; //printf("pop %d\n",u.type) ;
+            while(!on[u.type]) {u=pq.top() ; pq.pop() ;}
+            on[u.type]=0 ; ans++ ;
+            num-- ;
+        }
+        pq.push((P){a[i],nex[i]}) ;
+        on[a[i]]=1 ;
+    }
+    printf("%d\n",ans) ;
+}
+
